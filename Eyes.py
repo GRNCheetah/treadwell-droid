@@ -67,36 +67,44 @@ def squint():
 
     return 2
 
-''' MAIN '''
-eye_height = 400
-down = True
-time2Sleep = 0
-
-DONE = False
-ACTION = 'idle'
-while True:
-    gameDisplay.fill(colBlack)
     
-    ''' PERFORM ACTION '''
-    if ACTION == 'idle' or DONE:
-        time2Sleep = idle()
-        DONE = False
-        ACTION = randAction()
-    elif ACTION == 'blink':
-        down, eye_height, DONE, time2Sleep = blink(down, eye_height, DONE)
-    elif ACTION == 'squint':
-        time2Sleep = squint()
-        DONE = True
+    
+''' MAIN '''
 
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
-            
-        elif event.type == KEYDOWN:
-            if event.key == K_a:
+def main():
+    eye_height = 400
+    down = True
+    time2Sleep = 0
+    
+    DONE = False
+    ACTION = 'idle'
+    while True:
+        gameDisplay.fill(colBlack)
+        
+        ''' PERFORM ACTION '''
+        if ACTION == 'idle' or DONE:
+            time2Sleep = idle()
+            DONE = False
+            ACTION = randAction()
+        elif ACTION == 'blink':
+            down, eye_height, DONE, time2Sleep = blink(down, eye_height, DONE)
+        elif ACTION == 'squint':
+            time2Sleep = squint()
+            DONE = True
+    
+        for event in pygame.event.get():
+            if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            
-    pygame.display.update()
-    time.sleep(time2Sleep)
+                
+            elif event.type == KEYDOWN:
+                if event.key == K_a:
+                    pygame.quit()
+                    sys.exit()
+                
+        pygame.display.update()
+        time.sleep(time2Sleep)
+    
+    
+if __name__ == "__main__":
+    main()
