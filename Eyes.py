@@ -1,110 +1,104 @@
 import pygame
 from pygame.locals import *
-import sys
-import time
 import random
 
-pygame.init()
-pygame.mixer.pre_init()
 
-''' COLORS '''
-colGreen = pygame.Color(0,255,0)
-colBlack = pygame.Color(0,0,0)
+class Eyes:
 
-''' GAME DISPLAY '''
-dispWidth = 1600
-dispHeight = 900
-
-gameDisplay = pygame.display.set_mode((dispWidth, dispHeight),pygame.FULLSCREEN, 32)
-pygame.display.set_caption("Hello, I'm Darren")
-
-''' CONSTANTS '''
-ACTION = "" # keeps track of current action
-
-''' FUNCTIONS '''
-def randAction():
-    randNum = random.randrange(1, 1000)
-    print(randNum)
-    act = ""
-    if randNum >= 1 and randNum <= 800:
-        act = 'idle'
-    elif randNum > 800 and randNum <= 900:
-        act = 'blink'
-    elif randNum > 900 and randNum <= 1000:
-        act = 'squint'
-    return act
-    
-def idle():
-    pygame.draw.ellipse(gameDisplay, colGreen, (300, 250, 400, 400))
-    pygame.draw.ellipse(gameDisplay, colGreen, (900, 250, 400, 400))
-    #how long to sit in idle
-    return 2
-    
-#takes down and eye_height
-#returns down, eye_height, DONE, time2Sleep
-def blink(down, eye_height, DONE):
-    RATE = 5
-    # screen, color, (x,y,w,h), inside
-    pygame.draw.ellipse(gameDisplay, colGreen, (300, 650-eye_height, 400, eye_height))
-    pygame.draw.ellipse(gameDisplay, colGreen, (900, 650-eye_height, 400, eye_height))
-    
-    if eye_height > RATE and down:
-        eye_height -= RATE
-    elif eye_height < 400 and not(down):
-        eye_height += RATE
-    elif eye_height == RATE and down:
-        down = False
-        eye_height += RATE
-    elif eye_height == 400 and not(down):
-        down = True
-        DONE = True
-
-    return down, eye_height, DONE, .00001
-    
-def squint():
-    pygame.draw.rect(gameDisplay, colGreen, (300, 400, 400, 100))
-    pygame.draw.rect(gameDisplay, colGreen, (900, 400, 400, 100))
-
-    return 2
-
-    
-    
-''' MAIN '''
-
-def main():
-    eye_height = 400
-    down = True
-    time2Sleep = 0
-    
-    DONE = False
-    ACTION = 'idle'
-    while True:
-        gameDisplay.fill(colBlack)
+    def __init__(self, gameDisplay):
+        self.gD = gameDisplay
         
-        ''' PERFORM ACTION '''
-        if ACTION == 'idle' or DONE:
-            time2Sleep = idle()
-            DONE = False
-            ACTION = randAction()
-        elif ACTION == 'blink':
-            down, eye_height, DONE, time2Sleep = blink(down, eye_height, DONE)
-        elif ACTION == 'squint':
-            time2Sleep = squint()
-            DONE = True
+        self.intEyeHt = 400
+        self.blnDown = True
+        self.intTime2Sleep = 0
+        self.blnDone = False
+        self.blnAction = 'idle'
+   
+        
+    ''' FUNCTIONS '''
+    def randAction():
+        randNum = random.randrange(1, 1000)
+        print(randNum)
+        act = ""
+        if randNum >= 1 and randNum <= 800:
+            act = 'idle'
+        elif randNum > 800 and randNum <= 900:
+            act = 'blink'
+        elif randNum > 900 and randNum <= 1000:
+            act = 'squint'
+        return act
+        
+    # Desc: Displays a pair of open eyes
+    # Pre: Needs a declared display of a certain size
+    # Post: Displays the eyes in the middle of the screen
+    def idle(self, color):
+        pygame.draw.ellipse(self.gD, color, (300, 250, 400, 400))
+        pygame.draw.ellipse(self.gD, color, (900, 250, 400, 400))
+        self.blnDone = False
+        #how long to sit in idle
+        return 2
+        
+    # Desc: Blinks in while looping
+    # Pre: self.blnDone must be false, reset before hand. (Is reset in idle)
+    # Post: Blinks the eyes
+    def blink(self, color):
+        RATE = 5
+        # screen, color, (x,y,w,h), inside
+        pygame.draw.ellipse(self.gD, color, (300, 650-self.intEyeHt, 400, self.intEyeHt))
+        pygame.draw.ellipse(self.gD, color, (900, 650-self.intEyeHt, 400, self.intEyeHt))
+        
+        if not(self.blnDone):
+            if self.intEyeHt > RATE and self.blnDown:
+                self.intEyeHt -= RATE
+            elif self.intEyeHt < 400 and not(self.blnDown):
+                self.intEyeHt += RATE
+            elif self.intEyeHt == RATE and self.blnDown:
+                self.blnDown = False
+                self.intEyeHt += RATE
+            elif self.intEyeHt == 400 and not(self.blnDown):
+                self.blnDown = True
+                self.blnDone = True
+        
+    # Desc: Puts the eyes in a squint
+    # Pre: Needs a game display to have been declared
+    # Post: Squints the eyes
+    def squint(self, color):
+        pygame.draw.rect(self.gD, color, (300, 400, 400, 100))
+        pygame.draw.rect(self.gD, color, (900, 400, 400, 100))
     
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
-                
-            elif event.type == KEYDOWN:
-                if event.key == K_a:
-                    pygame.quit()
-                    sys.exit()
-                
-        pygame.display.update()
-        time.sleep(time2Sleep)
-    
-    
-if __name__ == "__main__":
-    main()
+        return 2
+
+        
+# used for testing, keeping for a little bit longer cause im lazy
+#''' MAIN '''
+#def main():
+#    while True:
+#        gameDisplay.fill(colBlack)
+#        
+#        ''' PERFORM ACTION '''
+#        if ACTION == 'idle' or DONE:
+#            time2Sleep = idle()
+#            DONE = False
+#            ACTION = randAction()
+#        elif ACTION == 'blink':
+#            down, intEyeHt, DONE, time2Sleep = blink(down, intEyeHt, DONE)
+#        elif ACTION == 'squint':
+#            time2Sleep = squint()
+#            DONE = True
+#    
+#        for event in pygame.event.get():
+#            if event.type == QUIT:
+#                pygame.quit()
+#                sys.exit()
+#                
+#            elif event.type == KEYDOWN:
+#                if event.key == K_a:
+#                    pygame.quit()
+#                    sys.exit()
+#                
+#        pygame.display.update()
+#        time.sleep(time2Sleep)
+#        
+#if __name__ == "__main__":
+#    main()
+
