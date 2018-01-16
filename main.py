@@ -16,16 +16,16 @@ pygame.init()
 pygame.mixer.pre_init()
 
 # (width, height)
-dispWH = (1600,900)
+dispWH = (1280, 720)
 
-gameDisplay = pygame.display.set_mode(dispWH,pygame.FULLSCREEN, 32)
+gameDisplay = pygame.display.set_mode(dispWH)
 pygame.display.set_caption("Treadwell")
 
 # Start both utilities
 screen = Eyes.Eyes(gameDisplay)
 bot = ArduinoControl.ArduinoControl()
 
-def main()
+def main():
     while True:
     
         # Moves the bot at the given speed
@@ -58,4 +58,6 @@ def main()
         
         # Last thing to be called
         pygame.display.update()
-    
+        
+        
+main()    
