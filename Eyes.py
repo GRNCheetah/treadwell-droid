@@ -58,7 +58,6 @@ class Eyes:
             elif self.intEyeHt == 400 and not(self.blnDown):
                 self.blnDown = True
                 self.blnDone = True
-    
         
     # Desc: Puts the eyes in a squint
     # Pre: Needs a game display to have been declared
@@ -102,3 +101,4 @@ class Eyes:
 #        
 #if __name__ == "__main__":
 #    main()
+
